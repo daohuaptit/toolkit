@@ -1,10 +1,13 @@
 package toolkit
 
-import "crypto/rand"
+import (
+	"crypto/rand"
+	"os"
+)
 
 const randomStringSource = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_+"
 
-type Tools struct {}
+type Tools struct{}
 
 func (t *Tools) RandomString(n int) string {
 	s, r := make([]rune, n), []rune(randomStringSource)
@@ -15,4 +18,16 @@ func (t *Tools) RandomString(n int) string {
 	}
 
 	return string(s)
+}
+
+// CreateDirIfNotExist creates a directory, and all necessary parents, if it does not exist
+func (t *Tools) CreateDirIfNotExist(path string) error {
+	const mode = 0755
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		err := os.MkdirAll(path, mode)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
